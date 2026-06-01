@@ -1,0 +1,7 @@
+/* marks_entry.css */
+/* Uses generic form styling from base, but encapsulates dashboard-grid for the twin inputs. */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Performance System{% endblock %}</title>
+    <link href="{{ url_for('static', filename='css/base.css', v=1) }}" rel="stylesheet">
+    {% block styles %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">EduStats ✨</a>
+        <div class="nav-links">
+            {% if 'user_id' in session %}
+            {% if session['role'] == 'teacher' %}
+            <a href="{{ url_for('teacher_dashboard') }}">Dashboard</a>
+            {% else %}
+            <a href="{{ url_for('student_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('certificate_upload') }}">Upload Certificate</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Logout ({{ session['name'] }})</a>
+            {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

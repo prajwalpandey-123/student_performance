@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Evaluate Student - EduStats{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/marks_entry.css', v=1) }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header">Evaluate Student: {{ student.name }} ({{ student.class_name }})</div>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" name="subject" id="subject" class="form-control" value="Mathematics" readonly>
+            <small style="color:var(--text-secondary)">Testing mock mapping (hardcoded to your subject)</small>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="form-group">
+                <label for="internal_marks">Internal Marks (Max 20)</label>
+                <input type="number" name="internal_marks" id="internal_marks" class="form-control" max="20" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="external_marks">External Marks (Max 80)</label>
+                <input type="number" name="external_marks" id="external_marks" class="form-control" max="80" min="0" required>
+            </div>
+        </div>
+        
+        <hr style="border-color: var(--border-color); margin: 1.5rem 0;">
+        
+        <div class="form-group">
+            <label for="rating">Performance Rating (1 to 10)</label>
+            <input type="number" name="rating" id="rating" class="form-control" max="10" min="1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="remarks">Remarks / Feedback</label>
+            <textarea name="remarks" id="remarks" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn">Save Evaluation</button>
+    </form>
+</div>
+{% endblock %}

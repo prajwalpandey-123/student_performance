@@ -1,0 +1,7 @@
+/* certificate_upload.css */
+/* Specific upload form layout overrides if desired, otherwise inherits from base */
+.form-group select,
+.form-group input[type="file"] {
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+}

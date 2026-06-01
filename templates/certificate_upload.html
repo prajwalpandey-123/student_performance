@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Certificate - EduStats{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/certificate_upload.css', v=1) }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="login-container card" style="max-width: 600px;">
+    <div class="card-header">Upload New Certificate</div>
+    <form method="POST" action="{{ url_for('certificate_upload') }}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select name="category" id="category" class="form-control" required style="padding:0.75rem; background-color: var(--bg-color); color:var(--text-primary);">
+                <option value="games">Sports & Games</option>
+                <option value="extra_activities">Extra Curricular Activities</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="file">Select File (PDF/Image)</label>
+            <input type="file" name="file" id="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required style="cursor: pointer;">
+        </div>
+        
+        <button type="submit" class="btn">Upload Certificate</button>
+    </form>
+</div>
+{% endblock %}

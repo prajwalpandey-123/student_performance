@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Dashboard - EduStats{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/teacher_dashboard.css', v=1) }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">Teacher Panel - Select Class</div>
+    <form method="GET" action="{{ url_for('teacher_dashboard') }}">
+        <div class="dashboard-grid" style="align-items: end;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="class_name">Class</label>
+                <select name="class_name" id="class_name" class="form-control" required style="padding:0.75rem; color: black; background-color: var(--bg-color); color:var(--text-primary);">
+                    <option value="">-- Select Class --</option>
+                    <option value="Class 10" {% if request.args.get('class_name') == 'Class 10' %}selected{% endif %}>Class 10</option>
+                    <option value="Class 11" {% if request.args.get('class_name') == 'Class 11' %}selected{% endif %}>Class 11</option>
+                    <option value="Class 12" {% if request.args.get('class_name') == 'Class 12' %}selected{% endif %}>Class 12</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="semester">Semester</label>
+                <select name="semester" id="semester" class="form-control" required style="padding:0.75rem; background-color: var(--bg-color); color:var(--text-primary);">
+                    <option value="">-- Select Semester --</option>
+                    <option value="1" {% if request.args.get('semester') == '1' %}selected{% endif %}>Semester 1</option>
+                    <option value="2" {% if request.args.get('semester') == '2' %}selected{% endif %}>Semester 2</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <button type="submit" class="btn">View Students</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if students %}
+<div class="card">
+    <div class="card-header">Students List</div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                <tr>
+                    <td>{{ s.id }}</td>
+                    <td>{{ s.name }}</td>
+                    <td>
+                        <a href="{{ url_for('marks_entry', student_id=s.id) }}" class="btn badge-warning" style="padding: 0.5rem 1rem; width: auto; font-size:0.9rem;">Evaluate</a>
+                        <a href="{{ url_for('student_view', student_id=s.id) }}" class="btn badge-good" style="padding: 0.5rem 1rem; width: auto; font-size:0.9rem; margin-left:0.5rem;">View Performance</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% elif request.args.get('class_name') %}
+<div class="alert alert-error">No students found for this class and semester.</div>
+{% endif %}
+{% endblock %}

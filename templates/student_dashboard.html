@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - EduStats{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/student_dashboard.css', v=1) }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">Welcome, {{ name }}!</div>
+    <div class="dashboard-grid">
+        <div class="stat-card card">
+            <h3>Total Percentage</h3>
+            <div class="value">{{ total_percentage }}%</div>
+        </div>
+        <div class="stat-card card">
+            <h3>Certificate Points</h3>
+            <div class="value">{{ total_points }}</div>
+        </div>
+        <div class="stat-card card">
+            <h3>Teacher Rating</h3>
+            <div class="value">{{ performance_rating }}/10</div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-header">Marks Breakdown</div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Internal</th>
+                        <th>External</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in marks %}
+                        <tr>
+                            <td>{{ m.subject }}</td>
+                            <td>{{ m.internal_marks }}/20</td>
+                            <td>{{ m.external_marks }}/80</td>
+                            <td>{{ m.internal_marks + m.external_marks }}/100</td>
+                            <td>
+                                {% set t = m.internal_marks + m.external_marks %}
+                                {% if t >= 75 %}
+                                    <span class="badge badge-good">Strength</span>
+                                {% elif t >= 50 %}
+                                    <span class="badge badge-warning">Average</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Weakness</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5">No marks recorded yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Academic Performance</div>
+        <div class="chart-container">
+            <canvas id="marksChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Performance Summary</div>
+    <p>Overall rating: <strong>{{ performance_rating }}/10</strong></p>
+    <p>Teacher remarks: <i>"{{ remarks }}"</i></p>
+    <br>
+    <p>You have collected <strong>{{ certificates | length }}</strong> certificates, adding a total of <strong>{{ total_points }}</strong> points to your extracurricular score!</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script id="marks-data" type="application/json">
+    {{ marks|tojson|safe }}
+</script>
+<script>
+    // Extract data from backend variables safely
+    const marksData = JSON.parse(document.getElementById('marks-data').textContent);
+    const labels = marksData.map(m => m.subject);
+    const internalData = marksData.map(m => m.internal_marks);
+    const externalData = marksData.map(m => m.external_marks);
+
+    const ctx = document.getElementById('marksChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Internal Marks',
+                    data: internalData,
+                    backgroundColor: 'rgba(3, 218, 198, 0.6)',
+                    borderColor: 'rgba(3, 218, 198, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'External Marks',
+                    data: externalData,
+                    backgroundColor: 'rgba(187, 134, 252, 0.6)',
+                    borderColor: 'rgba(187, 134, 252, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    stacked: true
+                },
+                x: {
+                    stacked: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

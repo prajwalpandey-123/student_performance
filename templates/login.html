@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - EduStats{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/login.css', v=1) }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="login-container card">
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('student')" id="tab-student">Student Login</div>
+        <div class="tab" onclick="switchTab('teacher')" id="tab-teacher">Teacher Login</div>
+    </div>
+
+    <form method="POST" action="{{ url_for('login') }}" id="login-form">
+        <input type="hidden" name="role" id="role-input" value="student">
+        
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control" required placeholder="Enter username">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required placeholder="Enter password (e.g., 1234)">
+        </div>
+        
+        <button type="submit" class="btn" id="login-btn">Login as Student</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function switchTab(role) {
+        document.getElementById('tab-student').classList.remove('active');
+        document.getElementById('tab-teacher').classList.remove('active');
+        
+        document.getElementById('tab-' + role).classList.add('active');
+        document.getElementById('role-input').value = role;
+        
+        document.getElementById('login-btn').innerText = 'Login as ' + (role.charAt(0).toUpperCase() + role.slice(1));
+    }
+</script>
+{% endblock %}
